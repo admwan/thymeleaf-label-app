@@ -1,0 +1,13 @@
+<!-- ingredi3nts.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Ingredients</title></head>
+<body>
+<h1>List Ingredients</h1>
+<form th:action="@{/country}" th:object="${ingredientForm}" method="post">
+    <textarea th:field="*{ingredients}" placeholder="Enter ingredients, separated by commas"></textarea>
+    <br/>
+    <button type="submit">Next: Country</button>
+</form>
+</body>
+</html>

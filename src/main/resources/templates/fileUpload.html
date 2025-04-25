@@ -1,1 +1,12 @@
-// Placeholder for fileUpload.html
+<!-- fileUpload.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>File Upload</title></head>
+<body>
+<h1>Upload Supporting Files</h1>
+<form th:action="@{/pricing}" th:object="${fileUploadForm}" method="post">
+    File Name: <input type="text" th:field="*{fileName}" />
+    <button type="submit">Next: Pricing</button>
+</form>
+</body>
+</html>

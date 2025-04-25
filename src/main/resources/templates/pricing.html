@@ -1,0 +1,12 @@
+<!-- pricing.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Pricing</title></head>
+<body>
+<h1>Pricing Information</h1>
+<form th:action="@{/checkout}" th:object="${pricingForm}" method="post">
+    Price: <input type="number" th:field="*{price}" />
+    <button type="submit">Proceed to Checkout</button>
+</form>
+</body>
+</html>
