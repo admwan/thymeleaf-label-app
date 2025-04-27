@@ -24,24 +24,27 @@ public class FlowController {
 
     // Start at country selection
     @GetMapping("/")
-    public String showCountryForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String showCountryForm(Model model, 
+                                   @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
         model.addAttribute("countryForm", sessionData.getCountryForm() != null ? sessionData.getCountryForm() : new CountryForm());
+        model.addAttribute("countries", Country.values()); // 🔥 Add this line
         return "country";
     }
-
     @PostMapping("/product")
-    public String handleCountryForm(@Valid @ModelAttribute CountryForm countryForm,
+    public String handleCountryForm(@Valid @ModelAttribute("countryForm") CountryForm countryForm,
                                     BindingResult bindingResult,
                                     @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
                                     Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("countries", Country.values());
-            return "country"; // Stay on the country page if validation error
+            model.addAttribute("countries", Country.values()); // reload dropdown values
+            return "country"; // stay on country page
         }
 
         sessionData.setCountryForm(countryForm);
-        return "redirect:/product";
+        return "redirect:/product"; // only move to next page if no errors
     }
+    
+    
     @GetMapping("/product")
     public String showProductForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
         model.addAttribute("productForm", sessionData.getProductForm() != null ? sessionData.getProductForm() : new ProductForm());
