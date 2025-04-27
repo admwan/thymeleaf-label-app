@@ -12,7 +12,6 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import jakarta.validation.Valid;
 
-
 @Controller
 @SessionAttributes("sessionData")
 public class FlowController {
@@ -22,7 +21,7 @@ public class FlowController {
         return new LabelGenerationSessionData();
     }
 
-    // ------------------------- Country -------------------------
+    // ------------------------- COUNTRY -------------------------
 
     @GetMapping("/")
     public String showCountryForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
@@ -47,10 +46,13 @@ public class FlowController {
         return "redirect:/product";
     }
 
-    // ------------------------- Product -------------------------
+    // ------------------------- PRODUCT -------------------------
 
     @GetMapping("/product")
     public String showProductForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getCountryForm() == null || sessionData.getCountryForm().getSelectedCountry() == null) {
+            return "redirect:/";
+        }
         if (sessionData.getProductForm() == null) {
             sessionData.setProductForm(new ProductForm());
         }
@@ -70,10 +72,15 @@ public class FlowController {
         return "redirect:/product-details";
     }
 
-    // ------------------------- Product Details -------------------------
+    // ------------------------- PRODUCT DETAILS -------------------------
 
     @GetMapping("/product-details")
     public String showProductDetailsForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getProductForm() == null ||
+            sessionData.getProductForm().getProductName() == null ||
+            sessionData.getProductForm().getProductCategory() == null) {
+            return "redirect:/product";
+        }
         if (sessionData.getProductDetailsForm() == null) {
             sessionData.setProductDetailsForm(new ProductDetailsForm());
         }
@@ -93,10 +100,16 @@ public class FlowController {
         return "redirect:/ingredients";
     }
 
-    // ------------------------- Ingredients -------------------------
+    // ------------------------- INGREDIENTS -------------------------
 
     @GetMapping("/ingredients")
     public String showIngredientsForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getProductDetailsForm() == null ||
+            sessionData.getProductDetailsForm().getProductDescription() == null ||
+            sessionData.getProductDetailsForm().getProductWeight() == null ||
+            sessionData.getProductDetailsForm().getPackagingType() == null) {
+            return "redirect:/product-details";
+        }
         if (sessionData.getIngredientForm() == null) {
             sessionData.setIngredientForm(new IngredientForm());
         }
@@ -116,10 +129,14 @@ public class FlowController {
         return "redirect:/custom-size";
     }
 
-    // ------------------------- Custom Size -------------------------
+    // ------------------------- CUSTOM SIZE -------------------------
 
     @GetMapping("/custom-size")
     public String showCustomSizeForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getIngredientForm() == null ||
+            sessionData.getIngredientForm().getIngredients() == null) {
+            return "redirect:/ingredients";
+        }
         if (sessionData.getSizeForm() == null) {
             sessionData.setSizeForm(new SizeForm());
         }
@@ -139,10 +156,15 @@ public class FlowController {
         return "redirect:/logo-generation";
     }
 
-    // ------------------------- Logo Generation -------------------------
+    // ------------------------- LOGO GENERATION -------------------------
 
     @GetMapping("/logo-generation")
     public String showLogoGenerationForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getSizeForm() == null ||
+            sessionData.getSizeForm().getWidth() == null ||
+            sessionData.getSizeForm().getHeight() == null) {
+            return "redirect:/custom-size";
+        }
         if (sessionData.getLogoForm() == null) {
             sessionData.setLogoForm(new LogoForm());
         }
@@ -162,10 +184,14 @@ public class FlowController {
         return "redirect:/file-upload";
     }
 
-    // ------------------------- File Upload -------------------------
+    // ------------------------- FILE UPLOAD -------------------------
 
     @GetMapping("/file-upload")
     public String showFileUploadForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getLogoForm() == null ||
+            sessionData.getLogoForm().getLogoType() == null) {
+            return "redirect:/logo-generation";
+        }
         if (sessionData.getFileUploadForm() == null) {
             sessionData.setFileUploadForm(new FileUploadForm());
         }
@@ -185,10 +211,14 @@ public class FlowController {
         return "redirect:/pricing";
     }
 
-    // ------------------------- Pricing -------------------------
+    // ------------------------- PRICING -------------------------
 
     @GetMapping("/pricing")
     public String showPricingForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getFileUploadForm() == null ||
+            sessionData.getFileUploadForm().getFileName() == null) {
+            return "redirect:/file-upload";
+        }
         if (sessionData.getPricingForm() == null) {
             sessionData.setPricingForm(new PricingForm());
         }
@@ -208,15 +238,18 @@ public class FlowController {
         return "redirect:/checkout";
     }
 
-    // ------------------------- Checkout -------------------------
+    // ------------------------- CHECKOUT -------------------------
 
     @GetMapping("/checkout")
     public String showCheckout(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+        if (sessionData.getPricingForm() == null || sessionData.getPricingForm().getPrice() == null) {
+            return "redirect:/pricing";
+        }
         model.addAttribute("sessionData", sessionData);
         return "checkout";
     }
 
-    // ------------------------- Start Over -------------------------
+    // ------------------------- START OVER -------------------------
 
     @PostMapping("/start-over")
     public String startOver(SessionStatus sessionStatus) {
