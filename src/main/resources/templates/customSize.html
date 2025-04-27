@@ -1,4 +1,48 @@
-<!-- customSize.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Custom Size</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Enter Custom Size</h1>
+
+    <form th:action="@{/logo-generation}" th:object="${sizeForm}" method="post" class="space-y-6">
+
+        <div>
+            <label for="width" class="block text-gray-700 font-semibold mb-2">Width (cm)</label>
+            <input type="text" id="width" th:field="*{width}"
+                   class="w-full border-gray-300 rounded p-2" placeholder="e.g. 10.5" />
+            <div th:if="${#fields.hasErrors('width')}" class="text-red-500 mt-1">
+                <p th:errors="*{width}"></p>
+            </div>
+        </div>
+
+        <div>
+            <label for="height" class="block text-gray-700 font-semibold mb-2">Height (cm)</label>
+            <input type="text" id="height" th:field="*{height}"
+                   class="w-full border-gray-300 rounded p-2" placeholder="e.g. 15.0" />
+            <div th:if="${#fields.hasErrors('height')}" class="text-red-500 mt-1">
+                <p th:errors="*{height}"></p>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center">
+            <a href="/ingredients" class="text-gray-600 hover:underline">Back: Ingredients</a>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                Next: Logo
+            </button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
+
+<!-- customSize.html 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head><title>Custom Size</title></head>
@@ -23,3 +67,4 @@
 </a>
 </body>
 </html>
+-->

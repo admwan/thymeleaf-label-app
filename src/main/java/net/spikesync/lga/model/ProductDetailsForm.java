@@ -7,7 +7,7 @@ public class ProductDetailsForm {
 	@NotEmpty(message = "Please provide a name for your product")
 	private String productName;
     
-	@NotEmpty(message = "Product description is required")
+    @NotEmpty(message = "Product description is required")
     private String productDescription;
 
     @NotEmpty(message = "Product weight is required")

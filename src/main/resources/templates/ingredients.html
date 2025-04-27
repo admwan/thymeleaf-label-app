@@ -33,3 +33,30 @@
 
 </body>
 </html>
+<!-- ingredi3nts.html OLD
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Ingredients</title>
+</head>
+<body>
+	<h1>List Ingredients</h1>
+	<form th:action="@{/custom-size}" th:object="${ingredientForm}"
+		method="post">
+		<textarea th:field="*{ingredients}"
+			placeholder="Enter ingredients, separated by commas"></textarea>
+		<br />
+		<div th:if="${#fields.hasErrors('ingredients')}" style="color:red;">
+   	 		<p th:errors="*{ingredients}"></p>
+		</div>
+		
+		<button type="submit">Next: Custom Size</button>
+	</form>
+	<br />
+	<br />
+	<a href="/product-details">
+		<button type="button">Back: Product details</button>
+	</a>
+</body>
+</html>
+-->

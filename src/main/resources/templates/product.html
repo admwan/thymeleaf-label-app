@@ -40,3 +40,34 @@
 
 </body>
 </html>
+<!-- DOCTYPE html ********------------- OLD -----------------*********** >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Selection</title>
+</head>
+<body>
+<h1>Select a Product</h1>
+<form th:action="@{/product-details}" th:object="${productForm}" method="post">
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" th:field="*{productName}" placeholder="e.g. Organic Shampoo" />
+    <div th:if="${#fields.hasErrors('productName')}" style="color:red;">
+    <p th:errors="*{productName}"></p>
+</div>
+    <br/>
+
+    <label for="productCategory">Product Category:</label>
+    <input type="text" id="productCategory" th:field="*{productCategory}" placeholder="e.g. Personal Care" />
+    <div th:if="${#fields.hasErrors('productCategory')}" style="color:red;">
+    <p th:errors="*{productCategory}"></p>
+</div><br/>
+
+    <button type="submit">Continue</button>
+</form>
+<br/><br/>
+<a href="/">
+    <button type="button">Back: Country selection</button>
+</a>
+</body>
+</html>
+-->

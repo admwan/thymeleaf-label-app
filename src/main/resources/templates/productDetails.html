@@ -11,6 +11,7 @@
 
     <form th:action="@{/ingredients}" th:object="${productDetailsForm}" method="post" class="space-y-6">
 
+        <!-- Product Description -->
         <div>
             <label for="productDescription" class="block text-gray-700 font-semibold mb-2">Product Description</label>
             <input type="text" id="productDescription" th:field="*{productDescription}"
@@ -20,6 +21,7 @@
             </div>
         </div>
 
+        <!-- Product Weight -->
         <div>
             <label for="productWeight" class="block text-gray-700 font-semibold mb-2">Product Weight</label>
             <input type="text" id="productWeight" th:field="*{productWeight}"
@@ -29,6 +31,7 @@
             </div>
         </div>
 
+        <!-- Packaging Type -->
         <div>
             <label for="packagingType" class="block text-gray-700 font-semibold mb-2">Packaging Type</label>
             <input type="text" id="packagingType" th:field="*{packagingType}"
@@ -38,6 +41,7 @@
             </div>
         </div>
 
+        <!-- Navigation Buttons -->
         <div class="flex justify-between items-center">
             <a href="/product" class="text-gray-600 hover:underline">Back: Product Selection</a>
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
@@ -50,3 +54,57 @@
 
 </body>
 </html>
+
+
+<!-- productDetails.html OLD 
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Details</title>
+</head>
+<body>
+<h1>Enter Product Details</h1>
+
+<form th:action="@{/ingredients}" th:object="${productDetailsForm}" method="post">
+
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" th:field="*{productName}" placeholder="e.g. Organic Soap" />
+    <div th:if="${#fields.hasErrors('productName')}" style="color:red;">
+  	  <p th:errors="*{productName}"></p>
+	</div>
+    
+    <br/>
+
+    <label for="productDescription">Product Description:</label>
+    <input type="text" id="productDescription" th:field="*{productDescription}" placeholder="e.g. Mild and natural" />
+    <div th:if="${#fields.hasErrors('productDescription')}" style="color:red;">
+    	<p th:errors="*{productDescription}"></p>
+	</div>
+    
+    <br/>
+
+    <label for="productWeight">Product Weight:</label>
+    <input type="text" id="productWeight" th:field="*{productWeight}" placeholder="e.g. 250g" />
+    <div th:if="${#fields.hasErrors('productWeight')}" style="color:red;">
+    	<p th:errors="*{productWeight}"></p>
+	</div>
+    
+    <br/>
+
+    <label for="packagingType">Packaging Type:</label>
+    <input type="text" id="packagingType" th:field="*{packagingType}" placeholder="e.g. Glass Jar" />
+    <div th:if="${#fields.hasErrors('packagingType')}" style="color:red;">
+    	<p th:errors="*{packagingType}"></p>
+	</div>	
+    <br/>
+
+    <button type="submit">Next: Ingredients</button>
+
+</form>
+<br/><br/>
+<a href="/product">
+    <button type="button">Back: Product selection</button>
+</a>
+</body>
+</html>
+-->
