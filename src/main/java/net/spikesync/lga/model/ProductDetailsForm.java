@@ -1,10 +1,19 @@
 package net.spikesync.lga.model;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class ProductDetailsForm {
 
-    private String productName;
+	@NotEmpty(message = "Please provide a name for your product")
+	private String productName;
+    
+	@NotEmpty(message = "Product description is required")
     private String productDescription;
+
+    @NotEmpty(message = "Product weight is required")
     private String productWeight;
+
+    @NotEmpty(message = "Packaging type is required")
     private String packagingType;
 
     public ProductDetailsForm() {
