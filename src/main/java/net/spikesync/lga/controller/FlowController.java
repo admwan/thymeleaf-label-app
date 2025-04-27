@@ -97,16 +97,23 @@ public class FlowController {
 
     @GetMapping("/ingredients")
     public String showIngredientsForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        // ⚡ Check if productDetailsForm is filled
-        if (sessionData.getProductDetailsForm() == null || sessionData.getProductDetailsForm().getProductDescription() == null) {
-            return "redirect:/product-details"; // 👈 Send user back to correct step!
-        }
-
         if (sessionData.getIngredientForm() == null) {
             sessionData.setIngredientForm(new IngredientForm());
         }
         model.addAttribute("ingredientForm", sessionData.getIngredientForm());
         return "ingredients";
+    }
+
+    @PostMapping("/custom-size")
+    public String handleIngredientsForm(@Valid @ModelAttribute("ingredientForm") IngredientForm ingredientForm,
+                                        BindingResult bindingResult,
+                                        @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                        Model model) {
+        if (bindingResult.hasErrors()) {
+            return "ingredients";
+        }
+        sessionData.setIngredientForm(ingredientForm);
+        return "redirect:/custom-size";
     }
 
     // ------------------------- Custom Size -------------------------
