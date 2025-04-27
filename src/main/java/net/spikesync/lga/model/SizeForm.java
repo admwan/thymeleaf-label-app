@@ -1,7 +1,12 @@
 package net.spikesync.lga.model;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class SizeForm {
+    @NotEmpty(message = "Width is required")
     private String width;
+
+    @NotEmpty(message = "Height is required")
     private String height;
 
     public String getWidth() {

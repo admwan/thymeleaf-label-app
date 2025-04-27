@@ -1,17 +1,35 @@
-<!-- ingredi3nts.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Ingredients</title></head>
-<body>
-<h1>List Ingredients</h1>
-<form th:action="@{/custom-size}" th:object="${ingredientForm}" method="post">
-    <textarea th:field="*{ingredients}" placeholder="Enter ingredients, separated by commas"></textarea>
-    <br/>
-    <button type="submit">Next: Custom Size</button>
-</form>
-<br/><br/>
-<a href="/product-details">
-    <button type="button">Back: Product details</button>
-</a>
+<head>
+    <title>Ingredients</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">List Ingredients</h1>
+
+    <form th:action="@{/custom-size}" th:object="${ingredientForm}" method="post" class="space-y-6">
+
+        <div>
+            <label for="ingredients" class="block text-gray-700 font-semibold mb-2">Ingredients (comma separated)</label>
+            <textarea id="ingredients" th:field="*{ingredients}"
+                      class="w-full border-gray-300 rounded p-2 h-32"
+                      placeholder="e.g. Water, Glycerin, Aloe Vera"></textarea>
+            <div th:if="${#fields.hasErrors('ingredients')}" class="text-red-500 mt-1">
+                <p th:errors="*{ingredients}"></p>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center">
+            <a href="/product-details" class="text-gray-600 hover:underline">Back: Product Details</a>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                Next: Custom Size
+            </button>
+        </div>
+
+    </form>
+</div>
+
 </body>
 </html>

@@ -7,6 +7,14 @@
 <form th:action="@{/logo-generation}" th:object="${sizeForm}" method="post">
     Width: <input type="text" th:field="*{width}" /> cm<br/>
     Height: <input type="text" th:field="*{height}" /> cm<br/>
+   	<div th:if="${#fields.hasErrors('width')}" style="color:red;">
+	    <p th:errors="*{width}"></p>
+    <div th:if="${#fields.hasErrors('height')}" style="color:red;">
+    	<p th:errors="*{height}"></p>
+</div>
+    
+</div>
+    
     <button type="submit">Next: Logo</button>
 </form>
 <br/><br/>

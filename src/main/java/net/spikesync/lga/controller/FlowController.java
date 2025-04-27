@@ -30,18 +30,18 @@ public class FlowController {
         model.addAttribute("countries", Country.values()); // 🔥 Add this line
         return "country";
     }
+    
     @PostMapping("/product")
     public String handleCountryForm(@Valid @ModelAttribute("countryForm") CountryForm countryForm,
                                     BindingResult bindingResult,
                                     @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
                                     Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("countries", Country.values()); // reload dropdown values
-            return "country"; // stay on country page
+            model.addAttribute("countries", Country.values());
+            return "country";
         }
-
         sessionData.setCountryForm(countryForm);
-        return "redirect:/product"; // only move to next page if no errors
+        return "redirect:/product";
     }
     
     
@@ -52,8 +52,13 @@ public class FlowController {
     }
 
     @PostMapping("/product-details")
-    public String handleProductForm(@ModelAttribute ProductForm productForm,
-                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handleProductForm(@Valid @ModelAttribute("productForm") ProductForm productForm,
+                                    BindingResult bindingResult,
+                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                    Model model) {
+        if (bindingResult.hasErrors()) {
+            return "product";
+        }
         sessionData.setProductForm(productForm);
         return "redirect:/product-details";
     }
@@ -65,8 +70,13 @@ public class FlowController {
     }
 
     @PostMapping("/ingredients")
-    public String handleProductDetailsForm(@ModelAttribute ProductDetailsForm productDetailsForm,
-                                           @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handleProductDetailsForm(@Valid @ModelAttribute("productDetailsForm") ProductDetailsForm productDetailsForm,
+                                           BindingResult bindingResult,
+                                           @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                           Model model) {
+        if (bindingResult.hasErrors()) {
+            return "productDetails";
+        }
         sessionData.setProductDetailsForm(productDetailsForm);
         return "redirect:/ingredients";
     }
@@ -78,8 +88,13 @@ public class FlowController {
     }
 
     @PostMapping("/custom-size")
-    public String handleIngredientsForm(@ModelAttribute IngredientForm ingredientForm,
-                                        @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handleIngredientsForm(@Valid @ModelAttribute("ingredientForm") IngredientForm ingredientForm,
+                                        BindingResult bindingResult,
+                                        @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                        Model model) {
+        if (bindingResult.hasErrors()) {
+            return "ingredients";
+        }
         sessionData.setIngredientForm(ingredientForm);
         return "redirect:/custom-size";
     }
@@ -91,8 +106,13 @@ public class FlowController {
     }
 
     @PostMapping("/logo-generation")
-    public String handleSizeForm(@ModelAttribute SizeForm sizeForm,
-                                 @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handleSizeForm(@Valid @ModelAttribute("sizeForm") SizeForm sizeForm,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                 Model model) {
+        if (bindingResult.hasErrors()) {
+            return "customSize";
+        }
         sessionData.setSizeForm(sizeForm);
         return "redirect:/logo-generation";
     }
@@ -104,12 +124,16 @@ public class FlowController {
     }
 
     @PostMapping("/file-upload")
-    public String handleLogoForm(@ModelAttribute LogoForm logoForm,
-                                 @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handleLogoForm(@Valid @ModelAttribute("logoForm") LogoForm logoForm,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                 Model model) {
+        if (bindingResult.hasErrors()) {
+            return "logoGeneration";
+        }
         sessionData.setLogoForm(logoForm);
         return "redirect:/file-upload";
     }
-
     @GetMapping("/file-upload")
     public String showFileUploadForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
         model.addAttribute("fileUploadForm", sessionData.getFileUploadForm() != null ? sessionData.getFileUploadForm() : new FileUploadForm());
@@ -117,8 +141,13 @@ public class FlowController {
     }
 
     @PostMapping("/pricing")
-    public String handleFileUploadForm(@ModelAttribute FileUploadForm fileUploadForm,
-                                       @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handleFileUploadForm(@Valid @ModelAttribute("fileUploadForm") FileUploadForm fileUploadForm,
+                                       BindingResult bindingResult,
+                                       @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                       Model model) {
+        if (bindingResult.hasErrors()) {
+            return "fileUpload";
+        }
         sessionData.setFileUploadForm(fileUploadForm);
         return "redirect:/pricing";
     }
@@ -130,8 +159,13 @@ public class FlowController {
     }
 
     @PostMapping("/checkout")
-    public String handlePricingForm(@ModelAttribute PricingForm pricingForm,
-                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handlePricingForm(@Valid @ModelAttribute("pricingForm") PricingForm pricingForm,
+                                    BindingResult bindingResult,
+                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                    Model model) {
+        if (bindingResult.hasErrors()) {
+            return "pricing";
+        }
         sessionData.setPricingForm(pricingForm);
         return "redirect:/checkout";
     }

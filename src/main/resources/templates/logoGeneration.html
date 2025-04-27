@@ -17,6 +17,10 @@
         <option value="green_dot">Green Dot</option>
         <option value="mobius_loop">Mobius Loop</option>
     </select>
+    <div th:if="${#fields.hasErrors('logoType')}" style="color:red;">
+    	<p th:errors="*{logoType}"></p>
+	</div>
+    	
     <br/><br/>
 
     <label for="customText">Custom Text (optional):</label>

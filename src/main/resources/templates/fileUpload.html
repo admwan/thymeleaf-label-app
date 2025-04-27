@@ -1,15 +1,24 @@
-<!-- fileUpload.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head><title>File Upload</title></head>
 <body>
 <h1>Upload Supporting Files</h1>
+
 <form th:action="@{/pricing}" th:object="${fileUploadForm}" method="post">
-    File Name: <input type="text" th:field="*{fileName}" />
+    File Name: 
+    <input type="text" th:field="*{fileName}" />
+    <div th:if="${#fields.hasErrors('fileName')}" style="color:red;">
+        <p th:errors="*{fileName}"></p>
+    </div>
+
+    <br/><br/>
     <button type="submit">Next: Pricing</button>
 </form>
+
 <br/><br/>
-<a href="/logo-generation">
+
+<!-- Clean Back button -->
+<a href="/logo-generation" style="text-decoration:none;">
     <button type="button">Back: Logo</button>
 </a>
 

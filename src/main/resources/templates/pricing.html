@@ -1,16 +1,33 @@
-<!-- pricing.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Pricing</title></head>
+<head>
+    <title>Pricing</title>
+</head>
 <body>
 <h1>Pricing Information</h1>
+
 <form th:action="@{/checkout}" th:object="${pricingForm}" method="post">
-    Price: <input type="number" th:field="*{price}" />
+    
+    <label for="price">Price (€):</label>
+    <input type="number"
+           id="price"
+           th:field="*{price}"
+           min="0.01"
+           step="0.01"
+           required
+           placeholder="e.g. 19.99" />
+    <div th:if="${#fields.hasErrors('price')}" style="color:red;">
+        <p th:errors="*{price}"></p>
+    </div>
+
+    <br/><br/>
     <button type="submit">Proceed to Checkout</button>
 </form>
+
 <br/><br/>
-<a href="/file-upload">
-    <button type="button">Back: Upload file</button>
+
+<a href="/file-upload" style="text-decoration:none;">
+    <button type="button">Back: File Upload</button>
 </a>
 
 </body>
