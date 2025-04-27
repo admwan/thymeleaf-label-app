@@ -3,11 +3,14 @@ package net.spikesync.lga.controller;
 import net.spikesync.lga.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import jakarta.validation.Valid;
 
 
 @Controller
@@ -27,12 +30,18 @@ public class FlowController {
     }
 
     @PostMapping("/product")
-    public String handleCountryForm(@ModelAttribute CountryForm countryForm,
-                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+    public String handleCountryForm(@Valid @ModelAttribute CountryForm countryForm,
+                                    BindingResult bindingResult,
+                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                    Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("countries", Country.values());
+            return "country"; // Stay on the country page if validation error
+        }
+
         sessionData.setCountryForm(countryForm);
         return "redirect:/product";
     }
-
     @GetMapping("/product")
     public String showProductForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
         model.addAttribute("productForm", sessionData.getProductForm() != null ? sessionData.getProductForm() : new ProductForm());
