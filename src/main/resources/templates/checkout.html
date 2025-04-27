@@ -1,10 +1,66 @@
 <!-- checkout.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Checkout</title></head>
+<head>
+    <title>Checkout - Label Summary</title>
+</head>
 <body>
-<h1>Review and Submit</h1>
-<p>All steps completed. Your label is ready!</p>
-<a href="/">Start Over</a>
+<h1>Review Your Label Information</h1>
+
+<!-- Country -->
+<h2>Country Selection</h2>
+<p th:text="'Selected Country: ' + ${sessionData.countryForm.selectedCountry}"></p>
+
+<!-- Product -->
+<h2>Product Selection</h2>
+<p th:text="'Product Name: ' + ${sessionData.productForm.productName}"></p>
+<p th:text="'Product Category: ' + ${sessionData.productForm.productCategory}"></p>
+
+<!-- Product Details -->
+<h2>Product Details</h2>
+<p th:text="'Product Description: ' + ${sessionData.productDetailsForm.productDescription}"></p>
+<p th:text="'Product Weight: ' + ${sessionData.productDetailsForm.productWeight}"></p>
+<p th:text="'Packaging Type: ' + ${sessionData.productDetailsForm.packagingType}"></p>
+
+<!-- Ingredients -->
+<h2>Ingredients</h2>
+<p th:text="'Ingredients List: ' + ${sessionData.ingredientForm.ingredients}"></p>
+
+<!-- Custom Size -->
+<h2>Custom Size</h2>
+<p th:text="'Width: ' + ${sessionData.sizeForm.width} + ' cm'"></p>
+<p th:text="'Height: ' + ${sessionData.sizeForm.height} + ' cm'"></p>
+
+<!-- Logo Generation -->
+<h2>Logo Selection</h2>
+<p th:text="'Logo Type: ' + ${sessionData.logoForm.logoType}"></p>
+<p th:text="'Custom Text: ' + ${sessionData.logoForm.customText}"></p>
+
+<!-- File Upload -->
+<h2>Uploaded File</h2>
+<p th:text="'File Name: ' + ${sessionData.fileUploadForm.fileName}"></p>
+
+<!-- Pricing -->
+<h2>Pricing</h2>
+<p th:text="'Price: ' + ${sessionData.pricingForm.price} + ' €'"></p>
+
+<br/><br/>
+
+<!-- Start Over Fresh button with confirmation -->
+<form th:action="@{/start-over}" method="post" style="display:inline;" onsubmit="return confirmStartOver();">
+    <button type="submit">Start Over Fresh</button>
+</form>
+
+<!-- Keep My Data button -->
+<a href="/">
+    <button type="button">Keep My Data</button>
+</a>
+
+<!-- Confirmation JavaScript -->
+<script type="text/javascript">
+    function confirmStartOver() {
+        return confirm("Are you sure you want to start over and erase all entered information?");
+    }
+</script>
 </body>
 </html>

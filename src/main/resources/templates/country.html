@@ -4,14 +4,15 @@
 <head><title>Country</title></head>
 <body>
 <h1>Select Target Country</h1>
-<form th:action="@{/custom-size}" th:object="${countryForm}" method="post">
-    <select th:field="*{selectedCountry}">
-        <option value="fr">France</option>
-        <option value="de">Germany</option>
-        <option value="es">Spain</option>
-    </select>
-    <br/>
-    <button type="submit">Next: Custom Size</button>
+<form th:action="@{/product}" th:object="${countryForm}" method="post">
+    <select id="selectedCountry" th:field="*{selectedCountry}">
+        <option value="">-- Please select --</option>
+        <option th:each="country : ${countries}"
+                th:value="${country.code}"
+                th:text="${country.displayName}">
+        </option>
+    </select>    <br/>
+    <button type="submit">Next: Product selection</button>
 </form>
 </body>
 </html>
