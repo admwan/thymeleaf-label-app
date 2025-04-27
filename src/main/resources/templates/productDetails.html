@@ -1,65 +1,7 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Product Details</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-
-<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">Enter Product Details</h1>
-
-    <form th:action="@{/ingredients}" th:object="${productDetailsForm}" method="post" class="space-y-6">
-        
-        <!-- Product Description -->
-        <div>
-            <label for="productDescription" class="block text-gray-700 font-semibold mb-2">Product Description</label>
-            <input type="text" id="productDescription" th:field="*{productDescription}"
-                   class="w-full border-gray-300 rounded p-2"
-                   placeholder="e.g. Mild and natural" />
-            <div th:if="${#fields.hasErrors('productDescription')}" class="text-red-500 mt-1">
-                <p th:errors="*{productDescription}"></p>
-            </div>
-        </div>
-
-        <!-- Product Weight -->
-        <div>
-            <label for="productWeight" class="block text-gray-700 font-semibold mb-2">Product Weight</label>
-            <input type="text" id="productWeight" th:field="*{productWeight}"
-                   class="w-full border-gray-300 rounded p-2"
-                   placeholder="e.g. 250g" />
-            <div th:if="${#fields.hasErrors('productWeight')}" class="text-red-500 mt-1">
-                <p th:errors="*{productWeight}"></p>
-            </div>
-        </div>
-
-        <!-- Packaging Type -->
-        <div>
-            <label for="packagingType" class="block text-gray-700 font-semibold mb-2">Packaging Type</label>
-            <input type="text" id="packagingType" th:field="*{packagingType}"
-                   class="w-full border-gray-300 rounded p-2"
-                   placeholder="e.g. Glass jar" />
-            <div th:if="${#fields.hasErrors('packagingType')}" class="text-red-500 mt-1">
-                <p th:errors="*{packagingType}"></p>
-            </div>
-        </div>
-
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center">
-            <a href="/product" class="text-gray-600 hover:underline">Back: Product Selection</a>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-                Next: Ingredients
-            </button>
-        </div>
-
-    </form>
-</div>
-
-</body>
-</html>
 
 
-<!-- productDetails.html OLD 
+
+<!productDetails.html OLD -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
