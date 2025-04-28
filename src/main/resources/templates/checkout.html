@@ -1,65 +1,43 @@
-<!-- checkout.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Checkout - Label Summary</title>
+    <title>Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>Review Your Label Information</h1>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-<!-- Country -->
-<h2>Country Selection</h2>
-<p th:text="'Selected Country: ' + ${sessionData.countryForm.selectedCountry}"></p>
+<div class="bg-white p-8 rounded shadow-md w-full max-w-2xl">
+    <h1 class="text-3xl font-bold mb-6 text-center">Review Your Label Information</h1>
 
-<!-- Product -->
-<h2>Product Selection</h2>
-<p th:text="'Product Name: ' + ${sessionData.productForm.productName}"></p>
-<p th:text="'Product Category: ' + ${sessionData.productForm.productCategory}"></p>
+    <div class="space-y-4 text-gray-700">
 
-<!-- Product Details -->
-<h2>Product Details</h2>
-<p th:text="'Product Description: ' + ${sessionData.productDetailsForm.productDescription}"></p>
-<p th:text="'Product Weight: ' + ${sessionData.productDetailsForm.productWeight}"></p>
-<p th:text="'Packaging Type: ' + ${sessionData.productDetailsForm.packagingType}"></p>
+        <p><strong>Country:</strong> <span th:text="${sessionData.countryForm.selectedCountry}"></span></p>
+        <p><strong>Product:</strong> <span th:text="${sessionData.productForm.productName}"></span> 
+           (<span th:text="${sessionData.productForm.productCategory}"></span>)</p>
+        <p><strong>Description:</strong> <span th:text="${sessionData.productDetailsForm.productDescription}"></span></p>
+        <p><strong>Weight:</strong> <span th:text="${sessionData.productDetailsForm.productWeight}"></span></p>
+        <p><strong>Packaging:</strong> <span th:text="${sessionData.productDetailsForm.packagingType}"></span></p>
+        <p><strong>Ingredients:</strong> <span th:text="${sessionData.ingredientForm.ingredients}"></span></p>
+        <p><strong>Size:</strong> <span th:text="${sessionData.sizeForm.width}"></span> cm x <span th:text="${sessionData.sizeForm.height}"></span> cm</p>
+        <p><strong>Logo:</strong> <span th:text="${sessionData.logoForm.logoType}"></span></p>
+        <p><strong>File Name:</strong> <span th:text="${sessionData.fileUploadForm.fileName}"></span></p>
+        <p><strong>Price:</strong> €<span th:text="${sessionData.pricingForm.price}"></span></p>
 
-<!-- Ingredients -->
-<h2>Ingredients</h2>
-<p th:text="'Ingredients List: ' + ${sessionData.ingredientForm.ingredients}"></p>
+    </div>
 
-<!-- Custom Size -->
-<h2>Custom Size</h2>
-<p th:text="'Width: ' + ${sessionData.sizeForm.width} + ' cm'"></p>
-<p th:text="'Height: ' + ${sessionData.sizeForm.height} + ' cm'"></p>
+    <div class="flex justify-center gap-4 mt-8">
+        <form th:action="@{/start-over}" method="post">
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded">
+                Start Over
+            </button>
+        </form>
 
-<!-- Logo Generation -->
-<h2>Logo Selection</h2>
-<p th:text="'Logo Type: ' + ${sessionData.logoForm.logoType}"></p>
-<p th:text="'Custom Text: ' + ${sessionData.logoForm.customText}"></p>
+        <a href="/" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded">
+            Confirm and Generate
+        </a>
+    </div>
 
-<!-- File Upload -->
-<h2>Uploaded File</h2>
-<p th:text="'File Name: ' + ${sessionData.fileUploadForm.fileName}"></p>
+</div>
 
-<!-- Pricing -->
-<h2>Pricing</h2>
-<p th:text="'€ ' + ${#numbers.formatDecimal(sessionData.pricingForm.price, 1, 2)}"></p>
-<br/><br/>
-
-<!-- Start Over Fresh button with confirmation -->
-<form th:action="@{/start-over}" method="post" style="display:inline;" onsubmit="return confirmStartOver();">
-    <button type="submit">Start Over Fresh</button>
-</form>
-
-<!-- Keep My Data button -->
-<a href="/">
-    <button type="button">Keep My Data</button>
-</a>
-
-<!-- Confirmation JavaScript -->
-<script type="text/javascript">
-    function confirmStartOver() {
-        return confirm("Are you sure you want to start over and erase all entered information?");
-    }
-</script>
 </body>
 </html>

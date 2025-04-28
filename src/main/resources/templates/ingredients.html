@@ -12,9 +12,11 @@
     <form th:action="@{/custom-size}" th:object="${ingredientForm}" method="post" class="space-y-6">
 
         <div>
-            <label for="ingredients" class="block text-gray-700 font-semibold mb-2">Ingredients (comma separated)</label>
+            <label for="ingredients" class="block text-gray-700 font-semibold mb-2">
+                Ingredients (comma-separated list)
+            </label>
             <textarea id="ingredients" th:field="*{ingredients}"
-                      class="w-full border-gray-300 rounded p-2 h-32"
+                      class="w-full border-gray-300 rounded p-2 h-32 resize-none"
                       placeholder="e.g. Water, Glycerin, Aloe Vera"></textarea>
             <div th:if="${#fields.hasErrors('ingredients')}" class="text-red-500 mt-1">
                 <p th:errors="*{ingredients}"></p>

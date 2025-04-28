@@ -1,4 +1,44 @@
-<!-- logoGeneration.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Logo Generation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Select Logo Type</h1>
+
+    <form th:action="@{/file-upload}" th:object="${logoForm}" method="post" class="space-y-6">
+
+        <div>
+            <label for="logoType" class="block text-gray-700 font-semibold mb-2">Logo Type</label>
+            <select id="logoType" th:field="*{logoType}" class="w-full border-gray-300 rounded p-2">
+                <option value="">-- Select a logo --</option>
+                <option value="triman">Triman</option>
+                <option value="recycle">Recycle</option>
+            </select>
+            <div th:if="${#fields.hasErrors('logoType')}" class="text-red-500 mt-1">
+                <p th:errors="*{logoType}"></p>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center">
+            <a href="/custom-size" class="text-gray-600 hover:underline">Back: Custom Size</a>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                Next: File Upload
+            </button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
+
+
+
+<!-- logoGeneration.html 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -36,3 +76,4 @@
 
 </body>
 </html>
+-->
