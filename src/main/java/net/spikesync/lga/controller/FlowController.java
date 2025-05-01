@@ -164,17 +164,24 @@ public class FlowController {
 
     @GetMapping("/logo-generation")
     public String showLogoGenerationForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getSizeForm() == null ||
-            sessionData.getSizeForm().getWidth() == null ||
-            sessionData.getSizeForm().getHeight() == null) {
+        if (sessionData.getSizeForm() == null) {
             return "redirect:/custom-size";
         }
+
         if (sessionData.getLogoForm() == null) {
             sessionData.setLogoForm(new LogoForm());
         }
+
         model.addAttribute("logoForm", sessionData.getLogoForm());
+
+        // 👇 Flag used in Thymeleaf template
+        boolean isFrance = sessionData.getCountryForm() != null &&
+                           "fr".equalsIgnoreCase(sessionData.getCountryForm().getSelectedCountry());
+        model.addAttribute("showTrimanOption", isFrance);
+
         return "logoGeneration";
     }
+
 
     @PostMapping("/file-upload")
     public String handleLogoForm(@Valid @ModelAttribute("logoForm") LogoForm logoForm,

@@ -12,15 +12,28 @@
     <div class="space-y-4 text-gray-700">
 
         <p><strong>Country:</strong> <span th:text="${sessionData.countryForm.selectedCountry}"></span></p>
+        
         <p><strong>Product:</strong> <span th:text="${sessionData.productForm.productName}"></span> 
            (<span th:text="${sessionData.productForm.productCategory}"></span>)</p>
+        
         <p><strong>Description:</strong> <span th:text="${sessionData.productDetailsForm.productDescription}"></span></p>
+        
         <p><strong>Weight:</strong> <span th:text="${sessionData.productDetailsForm.productWeight}"></span></p>
+        
         <p><strong>Packaging:</strong> <span th:text="${sessionData.productDetailsForm.packagingType}"></span></p>
+        
         <p><strong>Ingredients:</strong> <span th:text="${sessionData.ingredientForm.ingredients}"></span></p>
+        
         <p><strong>Size:</strong> <span th:text="${sessionData.sizeForm.width}"></span> cm x <span th:text="${sessionData.sizeForm.height}"></span> cm</p>
+        
         <p><strong>Logo:</strong> <span th:text="${sessionData.logoForm.logoType}"></span></p>
+        
         <p><strong>File Name:</strong> <span th:text="${sessionData.fileUploadForm.fileName}"></span></p>
+        
+        <div th:if="${sessionData.logoForm.trimanIncluded}">
+    		<p><strong>Triman Logo:</strong> Included</p>
+		</div>
+        
         <p><strong>Price:</strong> €<span th:text="${sessionData.pricingForm.price}"></span></p>
 
     </div>
