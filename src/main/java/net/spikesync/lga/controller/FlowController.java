@@ -188,12 +188,23 @@ public class FlowController {
                                  BindingResult bindingResult,
                                  @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
                                  Model model) {
+
+        boolean isFrance = sessionData.getCountryForm() != null &&
+                           "fr".equalsIgnoreCase(sessionData.getCountryForm().getSelectedCountry());
+
+        if (isFrance && logoForm.getTrimanIncluded() == null) {
+            bindingResult.rejectValue("trimanIncluded", "NotNull", "Please choose whether to include the Triman logo.");
+        }
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("showTrimanOption", isFrance);
             return "logoGeneration";
         }
+
         sessionData.setLogoForm(logoForm);
         return "redirect:/file-upload";
     }
+
 
     // ------------------------- FILE UPLOAD -------------------------
 
