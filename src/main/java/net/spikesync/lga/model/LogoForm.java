@@ -8,7 +8,7 @@ public class LogoForm {
 	@NotEmpty(message = "Logo type must be selected")
 	private String logoType;
 	
-	@NotNull(message = "Please choose whether to include the Triman logo")
+//	@NotNull(message = "Please choose whether to include the Triman logo")
 	private Boolean trimanIncluded;
 	
     private String customText; // Optional, so no validation
