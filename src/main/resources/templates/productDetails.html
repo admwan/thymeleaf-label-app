@@ -5,22 +5,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-
 <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
     <h1 class="text-2xl font-bold mb-6 text-center">Enter Product Details</h1>
 
     <form th:action="@{/ingredients}" th:object="${productDetailsForm}" method="post" class="space-y-6">
-
-        <!-- Product Name -->
-        <div>
-            <label for="productName" class="block text-gray-700 font-semibold mb-2">Product Name</label>
-            <input type="text" id="productName" th:field="*{productName}"
-                   class="w-full border-gray-300 rounded p-2"
-                   placeholder="e.g. Organic Soap" />
-            <div th:if="${#fields.hasErrors('productName')}" class="text-red-500 mt-1">
-                <p th:errors="*{productName}"></p>
-            </div>
-        </div>
 
         <!-- Product Description -->
         <div>
@@ -49,7 +37,7 @@
             <label for="packagingType" class="block text-gray-700 font-semibold mb-2">Packaging Type</label>
             <input type="text" id="packagingType" th:field="*{packagingType}"
                    class="w-full border-gray-300 rounded p-2"
-                   placeholder="e.g. Glass Jar" />
+                   placeholder="e.g. Glass jar" />
             <div th:if="${#fields.hasErrors('packagingType')}" class="text-red-500 mt-1">
                 <p th:errors="*{packagingType}"></p>
             </div>
@@ -65,9 +53,9 @@
 
     </form>
 </div>
-
 </body>
 </html>
+
 
 <!productDetails.html OLD -->
 <!-- DOCTYPE html>
