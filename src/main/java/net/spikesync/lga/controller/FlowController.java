@@ -1,282 +1,405 @@
 package net.spikesync.lga.controller;
 
-import net.spikesync.lga.model.*;
+import jakarta.validation.Valid;
+
+import net.spikesync.lga.model.Country;
+import net.spikesync.lga.model.CountryForm;
+import net.spikesync.lga.model.ProductForm;
+import net.spikesync.lga.model.ProductDetailsForm;
+import net.spikesync.lga.model.IngredientForm;
+import net.spikesync.lga.model.SizeForm;
+import net.spikesync.lga.model.LogoForm;
+import net.spikesync.lga.model.FileUploadForm;
+import net.spikesync.lga.model.PricingForm;
+import net.spikesync.lga.model.LabelGenerationSessionData;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.validation.BindingResult;
+
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 
-import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @Controller
 @SessionAttributes("sessionData")
 public class FlowController {
 
+    private static final Logger log = LoggerFactory.getLogger(FlowController.class);
+
+    // -------------------------
+    //  Session Attribute Setup
+    // -------------------------
     @ModelAttribute("sessionData")
-    public LabelGenerationSessionData createSessionData() {
+    public LabelGenerationSessionData initializeSession() {
+        log.debug("Creating NEW sessionData");
         return new LabelGenerationSessionData();
     }
 
-    // ------------------------- COUNTRY -------------------------
+    // -------------------------
+    //  Helper Methods
+    // -------------------------
 
-    @GetMapping("/")
-    public String showCountryForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getCountryForm() == null) {
+    private void logEnter(String pageName) {
+        log.debug("=== Entering page: {} ===", pageName);
+    }
+
+    private boolean missing(Object obj) {
+        return obj == null;
+    }
+
+    private boolean missingValue(String s) {
+        return s == null || s.isBlank();
+    }
+
+    private boolean ensureStepCompleted(boolean condition, String redirectTarget) {
+        return condition ? false : true;
+    }
+
+
+    // --------------------------------------------------------
+    //  STEP 1: COUNTRY
+    // --------------------------------------------------------
+
+    @GetMapping("/country")
+    public String showCountryForm(@ModelAttribute("sessionData") LabelGenerationSessionData sessionData, Model model) {
+
+        logEnter("country");
+
+        if (missing(sessionData.getCountryForm())) {
             sessionData.setCountryForm(new CountryForm());
         }
+
         model.addAttribute("countryForm", sessionData.getCountryForm());
         model.addAttribute("countries", Country.values());
         return "country";
     }
 
+
     @PostMapping("/product")
-    public String handleCountryForm(@Valid @ModelAttribute("countryForm") CountryForm countryForm,
-                                    BindingResult bindingResult,
-                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                    Model model) {
-        if (bindingResult.hasErrors()) {
+    public String handleCountryForm(
+            @Valid @ModelAttribute("countryForm") CountryForm countryForm,
+            BindingResult validation,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("POST /product (country)");
+
+        if (validation.hasErrors()) {
             model.addAttribute("countries", Country.values());
             return "country";
         }
+
         sessionData.setCountryForm(countryForm);
         return "redirect:/product";
     }
 
-    // ------------------------- PRODUCT -------------------------
+
+    // --------------------------------------------------------
+    //  STEP 2: PRODUCT
+    // --------------------------------------------------------
 
     @GetMapping("/product")
-    public String showProductForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getCountryForm() == null || sessionData.getCountryForm().getSelectedCountry() == null) {
-            return "redirect:/";
+    public String showProductForm(@ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+                                  Model model) {
+
+        logEnter("product");
+
+        if (missing(sessionData.getCountryForm())) {
+            return "redirect:/country";
         }
-        if (sessionData.getProductForm() == null) {
+
+        if (missing(sessionData.getProductForm())) {
             sessionData.setProductForm(new ProductForm());
         }
+
         model.addAttribute("productForm", sessionData.getProductForm());
         return "product";
     }
 
+
     @PostMapping("/product-details")
-    public String handleProductForm(@Valid @ModelAttribute("productForm") ProductForm productForm,
-                                    BindingResult bindingResult,
-                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                    Model model) {
-        if (bindingResult.hasErrors()) {
+    public String handleProductForm(
+            @Valid @ModelAttribute("productForm") ProductForm form,
+            BindingResult validation,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+
+        logEnter("POST /product-details");
+
+        if (validation.hasErrors()) {
             return "product";
         }
-        sessionData.setProductForm(productForm);
+
+        sessionData.setProductForm(form);
         return "redirect:/product-details";
     }
 
-    // ------------------------- PRODUCT DETAILS -------------------------
+    // --------------------------------------------------------
+    //  STEP 3: PRODUCT DETAILS
+    // --------------------------------------------------------
 
     @GetMapping("/product-details")
-    public String showProductDetailsForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getProductForm() == null ||
-            sessionData.getProductForm().getProductName() == null ||
-            sessionData.getProductForm().getProductCategory() == null) {
+    public String showProductDetails(
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("product-details");
+
+        if (missing(sessionData.getProductForm())) {
             return "redirect:/product";
         }
-        if (sessionData.getProductDetailsForm() == null) {
+
+        if (missing(sessionData.getProductDetailsForm())) {
             sessionData.setProductDetailsForm(new ProductDetailsForm());
         }
+
         model.addAttribute("productDetailsForm", sessionData.getProductDetailsForm());
         return "productDetails";
     }
 
+
     @PostMapping("/ingredients")
-    public String handleProductDetailsForm(@Valid @ModelAttribute("productDetailsForm") ProductDetailsForm productDetailsForm,
-                                           BindingResult bindingResult,
-                                           @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                           Model model) {
-        if (bindingResult.hasErrors()) {
-            System.out.println("Validation failed for Product Details form.");
+    public String handleProductDetails(
+            @Valid @ModelAttribute("productDetailsForm") ProductDetailsForm form,
+            BindingResult validation,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+
+        logEnter("POST /ingredients");
+
+        if (validation.hasErrors()) {
             return "productDetails";
         }
 
-        System.out.println("Product Details accepted. Redirecting to Ingredients page.");
-        sessionData.setProductDetailsForm(productDetailsForm);
+        sessionData.setProductDetailsForm(form);
         return "redirect:/ingredients";
     }
 
-
-    // ------------------------- INGREDIENTS -------------------------
+    // --------------------------------------------------------
+    //  STEP 4: INGREDIENTS
+    // --------------------------------------------------------
 
     @GetMapping("/ingredients")
-    public String showIngredientsForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getProductDetailsForm() == null ||
-            sessionData.getProductDetailsForm().getProductDescription() == null ||
-            sessionData.getProductDetailsForm().getProductWeight() == null ||
-            sessionData.getProductDetailsForm().getPackagingType() == null) {
+    public String showIngredients(
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("ingredients");
+
+        if (missing(sessionData.getProductDetailsForm())) {
             return "redirect:/product-details";
         }
-        if (sessionData.getIngredientForm() == null) {
+
+        if (missing(sessionData.getIngredientForm())) {
             sessionData.setIngredientForm(new IngredientForm());
         }
+
         model.addAttribute("ingredientForm", sessionData.getIngredientForm());
         return "ingredients";
     }
 
+
     @PostMapping("/custom-size")
-    public String handleIngredientsForm(@Valid @ModelAttribute("ingredientForm") IngredientForm ingredientForm,
-                                        BindingResult bindingResult,
-                                        @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                        Model model) {
-        if (bindingResult.hasErrors()) {
+    public String handleIngredients(
+            @Valid @ModelAttribute("ingredientForm") IngredientForm form,
+            BindingResult validation,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+
+        logEnter("POST /custom-size");
+
+        if (validation.hasErrors()) {
             return "ingredients";
         }
-        sessionData.setIngredientForm(ingredientForm);
+
+        sessionData.setIngredientForm(form);
         return "redirect:/custom-size";
     }
 
-    // ------------------------- CUSTOM SIZE -------------------------
+
+    // --------------------------------------------------------
+    //  STEP 5: SIZE
+    // --------------------------------------------------------
 
     @GetMapping("/custom-size")
-    public String showCustomSizeForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getIngredientForm() == null ||
-            sessionData.getIngredientForm().getIngredients() == null) {
+    public String showSize(
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("custom-size");
+
+        if (missing(sessionData.getIngredientForm())) {
             return "redirect:/ingredients";
         }
-        if (sessionData.getSizeForm() == null) {
+
+        if (missing(sessionData.getSizeForm())) {
             sessionData.setSizeForm(new SizeForm());
         }
+
         model.addAttribute("sizeForm", sessionData.getSizeForm());
         return "customSize";
     }
 
+
     @PostMapping("/logo-generation")
-    public String handleSizeForm(@Valid @ModelAttribute("sizeForm") SizeForm sizeForm,
-                                 BindingResult bindingResult,
-                                 @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                 Model model) {
-        if (bindingResult.hasErrors()) {
+    public String handleSize(
+            @Valid @ModelAttribute("sizeForm") SizeForm form,
+            BindingResult validation,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+
+        logEnter("POST /logo-generation");
+
+        if (validation.hasErrors()) {
             return "customSize";
         }
-        sessionData.setSizeForm(sizeForm);
+
+        sessionData.setSizeForm(form);
         return "redirect:/logo-generation";
     }
 
-    // ------------------------- LOGO GENERATION -------------------------
+
+    // --------------------------------------------------------
+    //  STEP 6: LOGO SELECTION
+    // --------------------------------------------------------
 
     @GetMapping("/logo-generation")
-    public String showLogoGenerationForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getSizeForm() == null) {
+    public String showLogo(
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("logo-generation");
+
+        if (missing(sessionData.getSizeForm())) {
             return "redirect:/custom-size";
         }
 
-        if (sessionData.getLogoForm() == null) {
+        if (missing(sessionData.getLogoForm())) {
             sessionData.setLogoForm(new LogoForm());
         }
 
         model.addAttribute("logoForm", sessionData.getLogoForm());
-
-        // 👇 Flag used in Thymeleaf template
-        boolean isFrance = sessionData.getCountryForm() != null &&
-                           "fr".equalsIgnoreCase(sessionData.getCountryForm().getSelectedCountry());
-        model.addAttribute("showTrimanOption", isFrance);
-
         return "logoGeneration";
     }
 
 
     @PostMapping("/file-upload")
-    public String handleLogoForm(@Valid @ModelAttribute("logoForm") LogoForm logoForm,
-                                 BindingResult bindingResult,
-                                 @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                 Model model) {
+    public String handleLogo(
+            @ModelAttribute("logoForm") LogoForm form,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
 
-        boolean isFrance = sessionData.getCountryForm() != null &&
-                           "fr".equalsIgnoreCase(sessionData.getCountryForm().getSelectedCountry());
+        logEnter("POST /file-upload");
 
-        if (isFrance && logoForm.getTrimanIncluded() == null) {
-            bindingResult.rejectValue("trimanIncluded", "NotNull", "Please choose whether to include the Triman logo.");
-        }
+        sessionData.setLogoForm(form);
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("showTrimanOption", isFrance);
-            return "logoGeneration";
-        }
-
-        sessionData.setLogoForm(logoForm);
         return "redirect:/file-upload";
     }
 
-
-    // ------------------------- FILE UPLOAD -------------------------
+    // --------------------------------------------------------
+    //  STEP 7: FILE UPLOAD
+    // --------------------------------------------------------
 
     @GetMapping("/file-upload")
-    public String showFileUploadForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getLogoForm() == null ||
-            sessionData.getLogoForm().getLogoType() == null) {
+    public String showFileUpload(
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("file-upload");
+
+        if (missing(sessionData.getLogoForm())) {
             return "redirect:/logo-generation";
         }
-        if (sessionData.getFileUploadForm() == null) {
+
+        if (missing(sessionData.getFileUploadForm())) {
             sessionData.setFileUploadForm(new FileUploadForm());
         }
+
         model.addAttribute("fileUploadForm", sessionData.getFileUploadForm());
         return "fileUpload";
     }
 
+
     @PostMapping("/pricing")
-    public String handleFileUploadForm(@Valid @ModelAttribute("fileUploadForm") FileUploadForm fileUploadForm,
-                                       BindingResult bindingResult,
-                                       @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                       Model model) {
-        if (bindingResult.hasErrors()) {
-            return "fileUpload";
+    public String handleFileUpload(
+            @RequestParam("file") MultipartFile file,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+
+        logEnter("POST /pricing");
+
+        if (!file.isEmpty()) {
+            sessionData.getFileUploadForm().setFileName(file.getOriginalFilename());
+            log.debug("Uploaded file: {}", file.getOriginalFilename());
+        } else {
+            log.warn("Upload attempted with empty file");
         }
-        sessionData.setFileUploadForm(fileUploadForm);
+
         return "redirect:/pricing";
     }
 
-    // ------------------------- PRICING -------------------------
+    // --------------------------------------------------------
+    //  STEP 8: PRICING
+    // --------------------------------------------------------
 
     @GetMapping("/pricing")
-    public String showPricingForm(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getFileUploadForm() == null ||
-            sessionData.getFileUploadForm().getFileName() == null) {
+    public String showPricing(
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("pricing");
+
+        if (missing(sessionData.getFileUploadForm()) ||
+            missing(sessionData.getFileUploadForm().getFileName())) {
             return "redirect:/file-upload";
         }
-        if (sessionData.getPricingForm() == null) {
+
+        if (missing(sessionData.getPricingForm())) {
             sessionData.setPricingForm(new PricingForm());
         }
+
         model.addAttribute("pricingForm", sessionData.getPricingForm());
         return "pricing";
     }
 
+
     @PostMapping("/checkout")
-    public String handlePricingForm(@Valid @ModelAttribute("pricingForm") PricingForm pricingForm,
-                                    BindingResult bindingResult,
-                                    @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
-                                    Model model) {
-        if (bindingResult.hasErrors()) {
+    public String handlePricing(
+            @Valid @ModelAttribute("pricingForm") PricingForm form,
+            BindingResult validation,
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
+
+        logEnter("POST /checkout");
+
+        if (validation.hasErrors()) {
             return "pricing";
         }
-        sessionData.setPricingForm(pricingForm);
+
+        sessionData.setPricingForm(form);
         return "redirect:/checkout";
     }
 
-    // ------------------------- CHECKOUT -------------------------
+    // --------------------------------------------------------
+    //  STEP 9: CHECKOUT
+    // --------------------------------------------------------
 
     @GetMapping("/checkout")
-    public String showCheckout(Model model, @ModelAttribute("sessionData") LabelGenerationSessionData sessionData) {
-        if (sessionData.getPricingForm() == null || sessionData.getPricingForm().getPrice() == null) {
+    public String showCheckout(
+            @ModelAttribute("sessionData") LabelGenerationSessionData sessionData,
+            Model model) {
+
+        logEnter("checkout");
+
+        if (missing(sessionData.getPricingForm())) {
             return "redirect:/pricing";
         }
-        model.addAttribute("sessionData", sessionData);
+
         return "checkout";
-    }
-
-
-    // ------------------------- START OVER -------------------------
-
-    @PostMapping("/start-over")
-    public String startOver(SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
-        return "redirect:/";
     }
 }
