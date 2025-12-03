@@ -67,6 +67,14 @@ public class FlowController {
         return condition ? false : true;
     }
 
+    // -------------------------------------------------------------
+    // HOME
+    // -------------------------------------------------------------
+    @GetMapping("/")
+    public String home() {
+        return "home";
+    }
+
 
     // --------------------------------------------------------
     //  STEP 1: COUNTRY
