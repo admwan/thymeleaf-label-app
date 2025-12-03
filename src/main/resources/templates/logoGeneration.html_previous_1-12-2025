@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Logo Generation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<div class="bg-white p-8 rounded shadow-md w-full max-w-lg">
+
+    <h1 class="text-2xl font-bold mb-6 text-center">Select Logo Options</h1>
+
+    <form th:action="@{/logo-generation}" 
+          th:object="${logoForm}" 
+          method="post" 
+          class="space-y-6">
+
+        <!-- Logo Type -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Choose Logo Type</label>
+
+            <select th:field="*{logoType}" class="w-full border-gray-300 rounded p-2">
+                <option value="">-- Select Logo Type --</option>
+                <option value="standard">Standard Logo</option>
+                <option value="minimal">Minimal Logo</option>
+                <option value="none">No Logo</option>
+            </select>
+
+            <div th:if="${#fields.hasErrors('logoType')}" class="text-red-500 mt-1">
+                <p th:errors="*{logoType}"></p>
+            </div>
+        </div>
+
+        <!-- TRIMAN OPTION (France only) -->
+        <div th:if="${showTrimanOption == true}">
+            <label class="block text-gray-700 font-semibold mb-2">
+                Include Triman Logo?
+            </label>
+
+            <select th:field="*{trimanIncluded}" class="w-full border-gray-300 rounded p-2">
+                <option value="">-- Select --</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+
+            <div th:if="${#fields.hasErrors('trimanIncluded')}" class="text-red-500 mt-1">
+                <p th:errors="*{trimanIncluded}"></p>
+            </div>
+        </div>
+
+        <!-- HIDDEN FALLBACK if NOT France -->
+        <input type="hidden"
+               th:if="${showTrimanOption == false}"
+               th:field="*{trimanIncluded}"
+               value="false" />
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center">
+            <a href="/custom-size" class="text-gray-600 hover:underline">Back: Size Selection</a>
+
+            <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                Next: File Upload
+            </button>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

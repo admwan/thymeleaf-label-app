@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Logo Generation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Select Logo Type</h1>
+
+    <form th:action="@{/file-upload}" th:object="${logoForm}" method="post" class="space-y-6">
+
+        <!-- Logo Type Dropdown -->
+        <div>
+            <label for="logoType" class="block text-gray-700 font-semibold mb-2">Logo Type</label>
+            <select id="logoType" th:field="*{logoType}" class="w-full border-gray-300 rounded p-2">
+                <option value="">-- Select a logo type --</option>
+                <option value="triman">Triman</option>
+                <option value="recycle">Recycle</option>
+            </select>
+            <div th:if="${#fields.hasErrors('logoType')}" class="text-red-500 mt-1">
+                <p th:errors="*{logoType}"></p>
+            </div>
+        </div>
+
+		<!-- Show Triman Option ONLY if France is selected -->
+		<div th:if="${showTrimanOption}">
+		    <label for="trimanIncluded" class="block text-gray-700 font-semibold mb-2">
+		        Include Triman Logo?
+		    </label>
+		
+		    <select id="trimanIncluded" th:field="*{trimanIncluded}" class="w-full border-gray-300 rounded p-2">
+		        <option value="">-- Select --</option>
+		        <option value="true">Yes</option>
+		        <option value="false">No</option>
+		    </select>
+		
+		    <div th:if="${#fields.hasErrors('trimanIncluded')}" class="text-red-500 mt-1">
+		        <p th:errors="*{trimanIncluded}"></p>
+		    </div>
+		</div>
+		
+		
+		<!-- Hidden fallback if NOT France -->
+		<input type="hidden"
+		       th:if="${showTrimanOption == false}" 
+		       th:field="*{trimanIncluded}"
+		       value="false" />
+
+        <!-- Show Triman Option ONLY if France is selected 
+        <div th:if="${showTrimanOption}">
+            <label for="trimanIncluded" class="block text-gray-700 font-semibold mb-2">
+                Include Triman Logo?
+            </label>
+            <select id="trimanIncluded" th:field="*{trimanIncluded}" class="w-full border-gray-300 rounded p-2">
+                <option value="">-- Select --</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+            <div th:if="${#fields.hasErrors('trimanIncluded')}" class="text-red-500 mt-1">
+                <p th:errors="*{trimanIncluded}"></p>
+            </div>
+        </div>
+
+        <<<<< Hidden fallback if not France 
+        <input type="hidden" th:if="${!showTrimanOption}" th:field="*{trimanIncluded}" th:value="false" />
+-->
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center">
+            <a href="/custom-size" class="text-gray-600 hover:underline">Back: Custom Size</a>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                Next: File Upload
+            </button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Logo Generation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+	<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+		<h1 class="text-2xl font-bold mb-6 text-center">Select Logo Type</h1>
+
+		<form th:action="@{/file-upload}" th:object="${logoForm}"
+			method="post" class="space-y-6">
+
+			<div>
+				<label for="logoType" class="block text-gray-700 font-semibold mb-2">Logo
+					Type</label> <select id="logoType" th:field="*{logoType}"
+					class="w-full border-gray-300 rounded p-2">
+					<option value="">-- Select a logo --</option>
+					<option value="triman">Triman</option>
+					<option value="recycle">Recycle</option>
+				</select>
+				<div th:if="${#fields.hasErrors('logoType')}"
+					class="text-red-500 mt-1">
+					<p th:errors="*{logoType}"></p>
+				</div>
+			</div>
+			<div th:if="${showTrimanOption}">
+				<label class="block text-gray-700 font-semibold mb-2">Include
+					Triman Logo?</label> <select th:field="*{trimanIncluded}"
+					class="w-full border-gray-300 rounded p-2">
+					<option value="">-- Select --</option>
+					<option value="true">Yes</option>
+					<option value="false">No</option>
+				</select>
+				<div th:if="${#fields.hasErrors('trimanIncluded')}"
+					class="text-red-500 mt-1">
+					<p th:errors="*{trimanIncluded}"></p>
+				</div>
+			</div>
+
+			<div class="flex justify-between items-center">
+				<a href="/custom-size" class="text-gray-600 hover:underline">Back:
+					Custom Size</a>
+				<button type="submit"
+					class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+					Next: File Upload</button>
+			</div>
+
+		</form>
+	</div>
+
+</body>
+</html>
+
+ -->
+
+<!-- logoGeneration.html 
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Logo Generation</title>
+</head>
+<body>
+<h1>Select Logo Type</h1>
+
+<form th:action="@{/file-upload}" th:object="${logoForm}" method="post">
+
+    <label for="logoType">Choose a Logo Type:</label>
+    <select id="logoType" th:field="*{logoType}">
+        <option value="">-- Please select --</option>
+        <option value="triman">Triman Logo</option>
+        <option value="recycle">Recycle Symbol</option>
+        <option value="green_dot">Green Dot</option>
+        <option value="mobius_loop">Mobius Loop</option>
+    </select>
+    <div th:if="${#fields.hasErrors('logoType')}" style="color:red;">
+    	<p th:errors="*{logoType}"></p>
+	</div>
+    	
+    <br/><br/>
+
+    <label for="customText">Custom Text (optional):</label>
+    <input type="text" id="customText" th:field="*{customText}" placeholder="e.g. Recyclable Material" />
+    <br/><br/>
+
+    <button type="submit">Next: File Upload</button>
+</form>
+<br/><br/>
+<a href="/custom-size">
+    <button type="button">Back: Product size</button>
+</a>
+
+</body>
+</html>
+-->

@@ -1,0 +1,157 @@
+package net.spikesync.lga.inci;
+
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Service;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+public class InciService {
+
+	static {
+	    System.out.println(">>> InciService class LOADED by JVM (static initializer)");
+	}
+
+    private final Map<String, InciEntry> inciMap = new HashMap<>();
+
+    public InciService() {
+        System.out.println(">>> InciService constructor called");
+    }
+
+    @PostConstruct
+    public void loadInciList() {
+        System.out.println(">>> Loading INCI CSV…");
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        Objects.requireNonNull(
+                                getClass().getClassLoader().getResourceAsStream("inci.csv"),
+                                "INCI CSV file not found"
+                        ),
+                        StandardCharsets.UTF_8
+                )
+        )) {
+
+            String line;
+            int lineNumber = 0;
+
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+
+                // Skip metadata header (first real row appears at line ~9)
+                if (lineNumber < 9) continue;
+
+                List<String> col = parseCsvLine(line);
+                if (col.size() < 10) continue; // not a valid COSING row
+
+                int refNo = parseInt(col.get(0));
+                String inciName   = normalize(col.get(1));
+                String inn        = normalize(col.get(2));
+                String phEur      = normalize(col.get(3));
+                String casNo      = normalize(col.get(4));
+                String ecNo       = normalize(col.get(5));
+                String desc       = normalize(col.get(6));
+                String restrict   = normalize(col.get(7));
+                String function   = normalize(col.get(8));
+                String date       = normalize(col.get(9));
+
+                if (!inciName.isEmpty()) {
+                    inciMap.put(
+                            inciName,
+                            new InciEntry(refNo, inciName, inn, phEur, casNo, ecNo, desc, restrict, function, date)
+                    );
+                }
+            }
+
+            System.out.println("Loaded INCI entries: " + inciMap.size());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+/*    @PostConstruct
+    public void loadInciList() {
+        try (var is = getClass().getResourceAsStream("/data/inci.csv");
+             var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            if (is == null) {
+                System.err.println("❌ ERROR: INCI CSV NOT FOUND at /data/inci.csv");
+                return;
+            } else {
+                System.out.println("✅ INCI CSV found!");
+            }
+            String line;
+            boolean first = true;
+
+            while ((line = reader.readLine()) != null) {
+
+                // Skip header
+                if (first) { first = false; continue; }
+
+                String[] parts = line.split(",", -1);
+                if (parts.length < 1) continue;
+
+                String inciName = parts[0].trim().toUpperCase();
+                String common = parts.length > 1 ? parts[1].trim() : "";
+                String function = parts.length > 2 ? parts[2].trim() : "";
+
+                inciMap.put(inciName, new InciEntry(inciName, common, function));
+            }
+
+            System.out.println("Loaded INCI entries: " + inciMap.size());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load INCI CSV", e);
+        }
+    }
+    */
+    
+    private int parseInt(String s) {
+        try { return Integer.parseInt(s.trim()); }
+        catch (Exception e) { return -1; }
+    }
+
+    private String normalize(String s) {
+        if (s == null) return "";
+        return s.trim().replaceAll("\\s+", " ").toUpperCase();
+    }
+
+    private List<String> parseCsvLine(String line) {
+        List<String> result = new ArrayList<>();
+        boolean inQuotes = false;
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : line.toCharArray()) {
+            if (c == '"') {
+                inQuotes = !inQuotes;
+            } else if (c == ',' && !inQuotes) {
+                result.add(sb.toString());
+                sb.setLength(0);
+            } else {
+                sb.append(c);
+            }
+        }
+        result.add(sb.toString());
+        return result;
+    }
+
+
+    public boolean isValid(String ingredient) {
+        return inciMap.containsKey(ingredient.trim().toUpperCase());
+    }
+
+    public Optional<InciEntry> find(String ingredient) {
+        return Optional.ofNullable(inciMap.get(ingredient.trim().toUpperCase()));
+    }
+
+    public List<InciEntry> search(String partial) {
+        String needle = partial.trim().toUpperCase();
+        return inciMap.values().stream()
+                .filter(i -> i.getInciName().contains(needle))
+                .collect(Collectors.toList());
+    }
+}

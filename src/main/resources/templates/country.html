@@ -7,61 +7,38 @@
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
 <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">Select Target Country</h1>
 
-    <form th:action="@{/product}" th:object="${countryForm}" method="post" class="space-y-6">
+    <h1 class="text-2xl font-bold mb-6 text-center">Choose Target Country</h1>
+
+    <form th:action="@{/country}" th:object="${countryForm}" method="post" class="space-y-6">
 
         <div>
-            <label for="selectedCountry" class="block text-gray-700 font-semibold mb-2">
-                Country
+            <label for="country" class="block text-gray-700 font-semibold mb-2">
+                Select a Country
             </label>
-            <select id="selectedCountry" th:field="*{selectedCountry}" class="w-full border-gray-300 rounded p-2">
-                <option value="">-- Please select a country --</option>
-                <option th:each="country : ${countries}"
-                        th:value="${country.code}"
-                        th:text="${country.displayName}">
-                </option>
+
+            <select id="country" th:field="*{selectedCountry}"
+                    class="w-full border-gray-300 rounded p-2">
+                <option value="">-- Select Country --</option>
+                <option value="FRANCE">France</option>
+                <option value="GERMANY">Germany</option>
+                <option value="ITALY">Italy</option>
+                <option value="SPAIN">Spain</option>
+                <option value="NETHERLANDS">Netherlands</option>
             </select>
+
             <div th:if="${#fields.hasErrors('selectedCountry')}" class="text-red-500 mt-1">
                 <p th:errors="*{selectedCountry}"></p>
             </div>
         </div>
 
-        <div class="flex justify-end">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-                Next: Product
-            </button>
-        </div>
+        <button type="submit"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+            Next
+        </button>
 
     </form>
 </div>
 
 </body>
 </html>
-
-<!-- country.html 
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Country</title></head>
-<body>
-<h1>Select Target Country</h1>
-<form th:action="@{/product}" th:object="${countryForm}" method="post">
-    <label for="selectedCountry">Select Country:</label>
-    <select id="selectedCountry" th:field="*{selectedCountry}">
-        <option value="">-- Please select --</option>
-        <option th:each="country : ${countries}"
-                th:value="${country.code}"
-                th:text="${country.displayName}">
-        </option>
-    </select>
-    <br/>
-    <div th:if="${#fields.hasErrors('selectedCountry')}" style="color:red;">
-        <p th:errors="*{selectedCountry}"></p>
-    </div>
-
-    <br/>
-    <button type="submit">Next: Product Selection</button>
-</form>
-</body>
-</html>
--->
