@@ -286,6 +286,12 @@ public class FlowController {
 
         logEnter("logo-generation");
 
+        boolean isFrance =
+        	    sessionData.getCountryForm() != null &&
+        	    "FRANCE".equalsIgnoreCase(sessionData.getCountryForm().getSelectedCountry());
+
+        	model.addAttribute("showTrimanOption", isFrance);
+
         if (missing(sessionData.getSizeForm())) {
             return "redirect:/custom-size";
         }

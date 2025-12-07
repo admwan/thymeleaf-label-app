@@ -40,7 +40,7 @@
         </div>
 
         <!-- Hidden fallback if not France -->
-        <input type="hidden" th:if="${!showTrimanOption}" th:field="*{trimanIncluded}" th:value="false" />
+        <input type="hidden" th:if="${showTrimanOption != true}" th:field="*{trimanIncluded}" th:value="false" />
 
         <!-- Navigation Buttons -->
         <div class="flex justify-between items-center">
